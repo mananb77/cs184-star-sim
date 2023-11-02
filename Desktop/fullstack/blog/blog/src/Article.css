@@ -1,0 +1,18 @@
+p {
+    margin-left: 40px;
+    max-width: 80%;
+}
+
+.articlePic {
+    margin-left: 40px;
+    height: 50%;
+    width: 50%;
+}
+
+.author {
+    font-size: 12px;
+}
+
+.content {
+    font-size: 18px;
+}

@@ -1,0 +1,27 @@
+h1, h2 {
+    padding-left: 40px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0px 10px;
+}
+  
+.links {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 10px;
+}
+  
+.links a {
+    margin-left: 10px;
+    text-decoration: none;
+    padding-left: 0px;
+}
+
+.icons {
+    width: 32px;
+    height: 32px;
+}

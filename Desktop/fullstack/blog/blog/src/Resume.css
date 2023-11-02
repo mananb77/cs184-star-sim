@@ -1,0 +1,35 @@
+.whole {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 5px 5px 5px black;
+    width: 50%
+}
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(54, 54, 54);
+    width: 100%;
+}
+
+ul {
+    list-style-type: none;
+}
+ul li:first-child {
+    margin-top: 20px;
+}
+ul li {
+    margin-bottom: 20px;
+}
+ul li::before {
+    content: " - ";
+}
+
+
+.headerIcon{
+    height: 30px;
+    width: 30px;
+}

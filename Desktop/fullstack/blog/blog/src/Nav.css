@@ -1,0 +1,26 @@
+nav {
+    background-color: rgb(20, 26, 35);
+    color: white;
+    height: 40px;
+    display: flex;
+    padding-left: 20px;
+}
+  
+a {
+    text-decoration: none;
+    color: white;
+    transition: 1s;
+    cursor: pointer;
+    padding: 20px
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+}
+.link:hover {
+    background-color: rgb(54, 54, 54);
+}
+  
