@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+</style>
+<title>CS 184 Cloth Simulator</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+
+<body>
+
+<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2024</h1>
+<h1 align="middle">Project 4: Cloth Simulator</h1>
+<h2 align="middle">KIRIRATANAK VONG</h2>
+
+<br><br>
+
+<div>
+
+<h2 align="middle">Overview</h2>
+<p>Give a high-level overview of what you implemented in this project. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the project.</p>
+<p>
+  In this project, I was designated with the task of implementing a real-time simulation of cloth using a mass and spring based system. 
+  Data structures were built to discretely represent the cloth, define and apply physical constraints on them, and apply numerical 
+  integration to simulate the movement of cloth with collisions and self-collisions. Shaders were also implemented to simulate the movements 
+  of different surfaces.
+</p>
+
+<h2 align="middle">Part I: Masses and springs</h2>
+<div align="middle">
+  <table style="width:100%">
+      <!-- Header -->
+      <tr align="center">
+          <td>
+              <img src="images/noshear.png" align="middle" width="300px" />
+              <figcaption>No shearing constraints</figcaption>
+          </td>
+          <td>
+              <img src="images/onlyshear.png" align="middle" width="300px" />
+              <figcaption>Only shearing constraints</figcaption>
+          </td>
+          <td>
+            <img src="images/allconstraints.png" align="middle" width="300px" />
+            <figcaption>All constraints</figcaption>
+          </td>
+      </tr>
+  </table>
+</div>
+<br />
+
+<h2 align="middle">Part II: Simulation via numerical integration</h2>
+<div align="middle">
+  <table style="width:100%">
+      <!-- Header -->
+      <tr align="center">
+          <td>
+              <img src="images/lowkstex.png" align="middle" width="300px" />
+              <figcaption>Low spring constant</figcaption>
+          </td>
+          <td>
+              <img src="images/highkstex.png" align="middle" width="300px" />
+              <figcaption>High spring constant</figcaption>
+          </td>
+      </tr>
+      <tr align="center">
+        <td>
+            <img src="images/lowdentex.png" align="middle" width="300px" />
+            <figcaption>Low density</figcaption>
+        </td>
+        <td>
+          <img src="images/highdentex.png" align="middle" width="300px" />
+          <figcaption>High density</figcaption>
+        </td>
+    </tr>
+    <tr align="center">
+      <td>
+          <img src="images/lowdampback.png" align="middle" width="300px" />
+          <figcaption>Low damping</figcaption>
+      </td>
+      <td>
+        <img src="images/highdampback.png" align="middle" width="300px" />
+        <figcaption>High damping</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+<br />
+
+<p>
+  Based on the experiments, increasing the spring constant causes the cloth to be stiffer. The sagging is much more pronounced and 
+  more time is taken to reach the resting state. Decreasing the spring constant does the opposite. Similarly, for density, decreasing 
+  the density causes the cloth to be less stiff. The sagging is less pronounced and less time is taken to reach the resting state. 
+  As for damping, increasing damping causes the cloth to need less oscillations to reach the resting state, although it takes much longer 
+  to reach the resting state due to greater resistance to motion. In the picture, you could also see that the cloth with lower damping 
+  parameters reaches further back when dropped from the opposite side.
+</p>
+
+<h2 align="middle">Part III: Handling collisions with other objects</h2>
+<div align="middle">
+  <table style="width:100%">
+      <!-- Header -->
+      <tr align="center">
+          <td>
+              <img src="images/500.png" align="middle" width="300px" />
+              <figcaption>ks = 500</figcaption>
+          </td>
+          <td>
+              <img src="images/5000.png" align="middle" width="300px" />
+              <figcaption>ks = 5000</figcaption>
+          </td>
+          <td>
+            <img src="images/50000.png" align="middle" width="300px" />
+            <figcaption>ks = 50000</figcaption>
+          </td>
+      </tr>
+  </table>
+</div>
+<br />
+
+<p>
+  For lower spring constants, the ends of the cloth reach further below the sphere when draped on it. It covers a larger 
+  area of the sphere and conforms more to the shape of the sphere. The opposite is true for higher spring constants. That is 
+  because the extra stiffness introduced to the cloth does not allow it to move flexibly.
+</p>
+
+<h2 align="middle">Part IV: Handling self-collisions</h2>
+
+<div align="middle">
+  <table style="width:100%">
+      <!-- Header -->
+      <tr align="center">
+          <td>
+              <img src="images/early.png" align="middle" width="300px" />
+              <figcaption>Early state</figcaption>
+          </td>
+          <td>
+              <img src="images/initialselfcoll.png" align="middle" width="300px" />
+              <figcaption>Initial self-collision</figcaption>
+          </td>
+          <td>
+            <img src="images/restcoll.png" align="middle" width="300px" />
+            <figcaption>Resting state</figcaption>
+          </td>
+      </tr>
+  </table>
+</div>
+<br />
+
+<div align="middle">
+  <table style="width:100%">
+      <!-- Header -->
+      <tr align="center">
+          <td>
+              <img src="images/lowkscoil.png" align="middle" width="300px" />
+              <figcaption>Low spring constant</figcaption>
+          </td>
+          <td>
+              <img src="images/highkscoll.png" align="middle" width="300px" />
+              <figcaption>High spring constant</figcaption>
+          </td>
+      </tr>
+      <tr align="center">
+        <td>
+            <img src="images/lowdenscoil.png" align="middle" width="300px" />
+            <figcaption>Low density</figcaption>
+        </td>
+        <td>
+          <img src="images/highdensitycoll.png" align="middle" width="300px" />
+          <figcaption>High density</figcaption>
+        </td>
+    </tr>
+  </table>
+</div>
+<br />
+
+<p>
+  Increasing the density leads to more of the cloth being concentrated in the middle as the heavier weight means higher resistance 
+  to external forces. That is also the reason for why it does not have many rolls. Similarly, decreasing the spring constant also 
+  means more of the cloth is concentrated in the middle. In this case, because the cloth deforms more easily, there are more self-collisions, 
+  which might be the reason. There are also more rolls because of this.
+</p>
+
+<h2 align="middle">Part V: Shaders</h2>
+<p>
+  A shader program always for accelerated computing of realistic lighting by taking advantage of the GPU and running multiple calculations 
+  in parallel. There are two main types of shaders: vertex shaders and fragment shaders.
+</p>
+<p>
+  Vertex shaders are responsible for modifying geometry of individual vertices by applying 3D transformations. They also 
+  output information to be used by the fragment shaders.
+</p>
+<p>
+  Fragment shaders are responsible for using the fragments from the vertex shaders to output specific colors by taking into account 
+  the material properties and other geometric properties.
+</p>
+
+<p>
+  The Blinn-Phong model consists of three parts: the ambient component, the diffuse component, and the specular component.
+</p>
+<p>
+  THe ambient component is the base level of illuimination that is given from light being scattered evenly in all directions. It is 
+  independent of viewing direction.
+</p>
+<p>
+  The diffuse component is the light that is scattered evenly in all directions after hitting the surface of an object. It produces a 
+  matte appearance on the object. It is independent of viewing direction,
+</p>
+<p>
+  The specular component is the shiny highlights that appear on a surface when light reflects off into a specific direction. The 
+  intensity depends on the viewing direction, appearing brighter near the mirror reflection direction.
+</p>
+
+<div align="middle">
+  <table style="width:100%">
+      <!-- Header -->
+      <tr align="center">
+          <td>
+              <img src="images/ambientonly.png" align="middle" width="300px" />
+              <figcaption>Ambient only</figcaption>
+          </td>
+          <td>
+              <img src="images/diffuseonly.png" align="middle" width="300px" />
+              <figcaption>Diffuse only</figcaption>
+          </td>
+      </tr>
+      <tr align="center">
+        <td>
+            <img src="images/specularonly.png" align="middle" width="300px" />
+            <figcaption>Specular only</figcaption>
+        </td>
+        <td>
+          <img src="images/entirephong.png" align="middle" width="300px" />
+          <figcaption>All components</figcaption>
+        </td>
+    </tr>
+  </table>
+</div>
+<br />
+
+<div align="center">
+  <td align="middle">
+        <img src="images/texmap.png" width="480px" />
+        <figcaption align="middle">Apothecary Diaries: MaoMao (Best MC)</figcaption>
+</div>
+
+<div align="middle">
+  <table style="width:100%">
+      <!-- Header -->
+      <tr align="center">
+          <td>
+              <img src="images/16cloth1.png" align="middle" width="300px" />
+              <figcaption>Bump: -o 16 -a 16</figcaption>
+          </td>
+          <td>
+              <img src="images/16cloth2.png" align="middle" width="300px" />
+              <figcaption>Bump: -o 16 -a 16</figcaption>
+          </td>
+          <td>
+            <img src="images/16sphere.png" align="middle" width="300px" />
+            <figcaption>Bump: -o 16 -a 16</figcaption>
+          </td>
+      </tr>
+      <tr align="center">
+        <td>
+            <img src="images/128cloth1.png" align="middle" width="300px" />
+            <figcaption>Bump: -o 128 -a 128</figcaption>
+        </td>
+        <td>
+            <img src="images/128cloth2.png" align="middle" width="300px" />
+            <figcaption>Bump: -o 128 -a 128</figcaption>
+        </td>
+        <td>
+          <img src="images/128sphere.png" align="middle" width="300px" />
+          <figcaption>Bump: -o 128 -a 128</figcaption>
+        </td>
+    </tr>
+    <tr align="center">
+      <td>
+          <img src="images/dis16cloth1.png" align="middle" width="300px" />
+          <figcaption>Displacement: -o 16 -a 16</figcaption>
+      </td>
+      <td>
+          <img src="images/dis16cloth2.png" align="middle" width="300px" />
+          <figcaption>Displacement: -o 16 -a 16</figcaption>
+      </td>
+      <td>
+        <img src="images/dis16sphere.png" align="middle" width="300px" />
+        <figcaption>Displacement: -o 16 -a 16</figcaption>
+      </td>
+  </tr>
+  <tr align="center">
+    <td>
+        <img src="images/dis128cloth1.png" align="middle" width="300px" />
+        <figcaption>Displacement: -o 128 -a 128</figcaption>
+    </td>
+    <td>
+        <img src="images/dis128cloth2.png" align="middle" width="300px" />
+        <figcaption>Displacement: -o 128 -a 128</figcaption>
+    </td>
+    <td>
+      <img src="images/dis128sphere.png" align="middle" width="300px" />
+      <figcaption>Displacement: -o 128 -a 128</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+<br />
+
+<p>
+  Bump mapping only creates the effect of uneven surfaces by altering the way that light interacts with the surface by computing 
+  new normal vectors using a height map, which details the level of elevation for each vertex. Displacement mapping does this, but 
+  also displaces the vertices along their new normals. This alters the geometry of the surface, creating a more realistic effect.
+</p> 
+<p>
+  Changing the coarseness of the sphere does virtually nothing for bump mapping while it creates more pronounced deformations for 
+  displacement mapping.
+</p>
+
+<div align="middle">
+  <table style="width:100%">
+      <!-- Header -->
+      <tr align="center">
+          <td>
+              <img src="images/mirrorcloth.png" align="middle" width="300px" />
+              <figcaption>Mirror shader on cloth</figcaption>
+          </td>
+          <td>
+              <img src="images/mirrorsphere.png" align="middle" width="300px" />
+              <figcaption>Mirror shader on sphere</figcaption>
+          </td>
+      </tr>
+  </table>
+</div>
+<br />
+
+</body>
+</html>
