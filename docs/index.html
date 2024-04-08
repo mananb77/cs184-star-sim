@@ -1,0 +1,692 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>CS184 Final Project Proposal: Supernova Explosion Particle Simulator</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="80730e16-e7df-41db-b837-493e38e03b68" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/webb3.jpg" style="object-position:center 50%"/><h1 class="page-title">CS184 Final Project Proposal: Supernova Explosion Particle Simulator</h1><p class="page-description"></p></header><div class="page-body"><h2 id="d1859e19-df17-4852-bb23-c63b23c83daa" class="">Important Links</h2><p id="bd8d9fdc-b884-4334-b9dc-9cd24bae4273" class="">Github Repo: <a href="https://github.com/mananb77/cs184-star-sim">https://github.com/mananb77/cs184-star-sim</a> </p><h2 id="b7e0ca0d-a7b4-4ef9-b89e-0f2e010187e0" class="">Summary</h2><p id="52780059-bb87-4cbc-936d-b03c2c8a01ac" class="">We are developing a 2d fluid dynamics gaseous particle simulation Using N-Body Simulator with CUDA Acceleration to simulate a supernova explosion.Team Members</p><table id="2f102e43-d89e-437a-90a0-ac2a563c6d3b" class="simple-table"><tbody><tr id="72b8b7e9-9284-4c8b-a3ba-d2a398ea8a91"><td id="Vogl" class="" style="width:138px"><strong>Name</strong></td><td id="nWCo" class="" style="width:138px"><strong>Email</strong></td><td id="^NT[" class="" style="width:138px"><strong>Github</strong></td><td id="jYEP" class="" style="width:138px"><strong>Phone Number</strong></td><td id="sB\X" class="" style="width:138px"></td></tr><tr id="81601144-87f7-440a-a5cd-b821c50bca3a"><td id="Vogl" class="" style="width:138px">Snehaa Kumar</td><td id="nWCo" class="" style="width:138px"><a href="mailto:snehaa@berkeley.edu">snehaa@berkeley.edu</a></td><td id="^NT[" class="" style="width:138px"><a href="https://github.com/snehaagk">https://github.com/snehaagk</a></td><td id="jYEP" class="" style="width:138px">+1 (916) 350-1301</td><td id="sB\X" class="" style="width:138px"></td></tr><tr id="05fe2aed-0f17-4f29-9df0-b96e9831d42d"><td id="Vogl" class="" style="width:138px">Manan Bhargava</td><td id="nWCo" class="" style="width:138px"><a href="mailto:manan.bhargava@berkeley.edu">manan.bhargava@berkeley.edu</a></td><td id="^NT[" class="" style="width:138px"><a href="https://github.com/mananb77">https://github.com/mananb77</a></td><td id="jYEP" class="" style="width:138px">+1 (408) 752-6246</td><td id="sB\X" class="" style="width:138px"></td></tr><tr id="6b5f7ef4-26b9-47e1-badd-f4eca01a413a"><td id="Vogl" class="" style="width:138px">Brandon Wong</td><td id="nWCo" class="" style="width:138px"><a href="mailto:Bwong928@berkeley.edu">Bwong928@berkeley.edu</a></td><td id="^NT[" class="" style="width:138px"><a href="https://github.com/brandogn">https://github.com/brandogn</a></td><td id="jYEP" class="" style="width:138px">+1 (916) 823-1522</td><td id="sB\X" class="" style="width:138px"></td></tr><tr id="6533d506-854d-479d-9a6d-7416f0c7714e"><td id="Vogl" class="" style="width:138px">Nak Vong</td><td id="nWCo" class="" style="width:138px"><a href="mailto:kiriratanakvong@berkeley.edu">kiriratanakvong@berkeley.edu</a></td><td id="^NT[" class="" style="width:138px"><a href="https://github.com/NakVong">https://github.com/NakVong</a></td><td id="jYEP" class="" style="width:138px">+1 (831) 258-6283</td><td id="sB\X" class="" style="width:138px"></td></tr></tbody></table><p id="c8f2eed1-89ba-46b3-a5e9-238d36ffca61" class="">
+</p><h2 id="ca05a4e8-bdef-4720-9802-02807042cba1" class="">Problem Description</h2><p id="d926f9dc-3da2-4688-ac0c-065a0b562997" class="">There is a lack of existing projects that simulate supernovas, for a good reason, as supernovas are a difficult-to-model phenomenon that requires great amounts of effort and computational budget to produce a realistically accurate simulation due to sheer number of particles and physics-related complexities. For our project, we are planning to create a simpler approximation of the supernova explosion.</p><p id="8ea368d6-a877-41e4-abf2-ec629b136915" class="">We felt that this problem is important because of the general absence of such simulations, and the beauty of a supernova explosion is worth the trek. Also, while the version we plan to implement is not entirely accurate, a fully fleshed-out simulation might help scientists further understand the star formation cycle.</p><p id="62ea9773-400b-4818-8ff4-d9d850da2651" class="">There are numerous challenges involved in accurately modeling a supernova explosion, mainly relating to understanding the astrophysics behind it, efficiently calculating values during timesteps based on numerous variables, and accurately rendering the colors of the different elements at their respective states. Because of these challenges, we opted to simplify our simulation to a 2D version involving a simple particle system.</p><p id="9a8f6702-0391-41b0-bdbe-c8f06f240f7d" class="">
+</p><p id="5701ed49-6eb0-4d3c-8e48-4bfaa7718000" class=""><strong>Our approach to solving this problem</strong>:</p><p id="69afa851-f522-4634-9296-7127e2eafd88" class="">We are trying to create an N-body simulator involving a large number of celestial bodies that is accelerated by CUDA to try and simulate a simplified supernova explosion.</p><p id="5c04a0e1-9eed-4c7a-b383-39aec7403ef1" class="">Essentially, the setup consists of particles initialized in their respective locations with their gravitational pulls. The particles are then released from their initial positions, and the simulation models the motion of the particles over time. Particles are released and attracted into a central gravitational force. We then also include the option to add radially outward external forces from the center for simulating the particle explosion.</p><p id="79298e45-52d8-414a-b359-ddab5cd71c10" class="">Here are some potential parameters that we plan to use to model our simulation as well as render each particle:</p><ul id="25cef0b5-5fdd-4ccf-8f51-a9c29228b12c" class="bulleted-list"><li style="list-style-type:disc">Temperature</li></ul><ul id="a23c9e47-eb3d-4d40-8d3b-fb993106b5d9" class="bulleted-list"><li style="list-style-type:disc">Pressure</li></ul><ul id="21339ef4-ad14-4eac-bcfe-6875ab985b4f" class="bulleted-list"><li style="list-style-type:disc">Initial position formations</li></ul><ul id="5053b6e3-f462-4c71-9ca0-541e51c11122" class="bulleted-list"><li style="list-style-type:disc">Radius</li></ul><ul id="9ca8703a-ee6b-4bcd-89bd-27b1027ec126" class="bulleted-list"><li style="list-style-type:disc">Timestep</li></ul><ul id="1efd4d63-f6dc-4310-8cf6-401721e2778b" class="bulleted-list"><li style="list-style-type:disc">Distance to other particles</li></ul><ul id="4832d9d4-1acd-4fbb-9cba-0fb395bc61b1" class="bulleted-list"><li style="list-style-type:disc">Gravity (including the velocity and acceleration of particles)</li></ul><ul id="94ee1664-30d4-4c13-98b0-70fc8553920a" class="bulleted-list"><li style="list-style-type:disc">Elements / Mass of the gaseous particles</li></ul><h2 id="4019d26c-4421-43dc-8074-b67bed1df665" class="">Goals and Deliverables</h2><p id="d23a5225-b0b3-4758-85a1-fec2aa4d11bf" class=""><strong>What we plan to deliver</strong></p><p id="ed08e7a6-8cdb-48bd-b400-8a8386fc7e26" class="">We plan to deliver a fluid dynamics-based (gas) particle simulation to model the interactions between different celestial objects involved in a supernova explosion that is accelerated using CUDA cores.</p><p id="71b40e68-1d6f-40aa-ad78-7c33f2f7c848" class="">We plan to use HW4 Clothsim as a baseline to modify to suit our needs, implementing the necessary laws of physics and integrating CUDA acceleration to take advantage of the graphical power of the GPU, which would greatly reduce our rendering and debugging times. It is also necessary for a simulation that involves upwards of hundreds of thousands of particles.</p><p id="92a7f543-6fa2-4408-867f-2b41cf0b014e" class="">
+</p><p id="f6a1419f-be98-4c0c-9b29-8a9ea0f36c5f" class=""><strong>Here is what a successful project will look like:</strong></p><ol type="1" id="b569312c-6aa5-4b34-bc3b-4ae435012edc" class="numbered-list" start="1"><li>2D fluid dynamics gaseous particle simulation with CUDA acceleration</li></ol><ol type="1" id="a4f0b57c-e9a9-4e7f-add1-20789af8f843" class="numbered-list" start="2"><li>A functional renderer  </li></ol><ol type="1" id="d373220a-268c-4d8e-93bb-8be610a00b26" class="numbered-list" start="3"><li>Interactive GUI with slider parameter modification for customization</li></ol><p id="3a788279-bb40-408a-a81f-3d4b3c351449" class="">
+</p><p id="96d16c6e-ba4c-4c25-914a-0b717980d4c0" class=""><strong>What kind of images we will create:</strong></p><ul id="93086bb4-f428-4fb1-a226-33548cb8558b" class="bulleted-list"><li style="list-style-type:disc"><strong>Initial Particle Configuration:</strong> This set of images will depict the starting positions of particles before the simulation triggers the supernova explosion. It sets the stage for the dynamic events that follow, illustrating the calm before the cosmic storm.</li></ul><ul id="c9cb9295-ca0a-4242-b360-af071ff8e700" class="bulleted-list"><li style="list-style-type:disc"><strong>Particle Dynamics:</strong> Following the initial setup, we will capture the moment particles are released and begin their inward collapse towards the central core. This phase is crucial for understanding the gravitational forces at play and the initial conditions leading to the supernova explosion.</li></ul><ul id="8e90a0cc-76f9-4313-a23b-cb4d2a44758b" class="bulleted-list"><li style="list-style-type:disc">Colorful images that resemble a supernova explosion at different time steps<ul id="f78430ae-2e15-427a-a2d2-9f3409185d28" class="bulleted-list"><li style="list-style-type:circle"><strong>Initial Explosion:</strong> Images capturing the very moment of the supernova explosion, focusing on the intense burst of light and energy. These images will feature bright, white-hot centers transitioning to vibrant yellows and reds, mimicking the initial, most energetic phase of a supernova.</li></ul><ul id="e5f09de1-1af6-4c65-9e55-2474dd5e5776" class="bulleted-list"><li style="list-style-type:circle"><strong>Expansion Phase:</strong> As the explosion expands, we will create images that show the dispersion of materials. These images will be characterized by a rich palette of colors, representing different elements being expelled at high speeds. Expect to see a spectrum of colors from deep reds and oranges to blues and greens, indicating various temperatures and compositions.</li></ul><ul id="05ce7ee2-eea6-4c80-a995-8a201fffde7e" class="bulleted-list"><li style="list-style-type:circle"><strong>Cooling Phase:</strong> Images depicting the later stages of the supernova, where the expansion slows and the colors shift towards cooler tones. These images will focus on the intricate patterns and filament structures that form as the material cools, with a predominance of blues, purples, and faint reds, reflecting the decreasing temperatures and the transition to the nebula phase.</li></ul></li></ul><p id="00c66da7-a43f-47cd-8d43-81b0ac4c9b14" class="">
+</p><p id="4117a15a-4f07-469a-ab86-741bfd2d90ba" class=""><strong>Measuring Quality:</strong></p><ul id="fe7fd9da-5eee-460c-ae04-1e1ec7eb1d92" class="bulleted-list"><li style="list-style-type:disc"><strong>Rendering Performance:</strong> We will benchmark the frames per second (fps) achieved during the simulation to ensure smooth, real-time performance.</li></ul><ul id="06184002-36f6-4fd4-9624-8d859453dd45" class="bulleted-list"><li style="list-style-type:disc"><strong>Visual Fidelity:</strong> The aesthetic appeal and color accuracy of the simulation will be assessed to ensure it closely resembles real supernova explosions, as documented in astronomical observations.</li></ul><ul id="1c5779be-4657-44d4-8e9d-17398203393d" class="bulleted-list"><li style="list-style-type:disc"><strong>Particle Count:</strong> The ability to render a vast number of particles in real-time will be a critical measure of our simulation&#x27;s capability.</li></ul><p id="829e9387-ecfb-4741-ac88-7391c0caf581" class="">
+</p><p id="a71e2110-ed5e-441d-a75d-4a8a46a97c3d" class=""><strong>Questions we plan to answer with our analysis:</strong></p><ul id="f6ad6e89-c73f-46a1-a6f3-68f50f9d2ce7" class="bulleted-list"><li style="list-style-type:disc"><strong>Trajectories and Distances: </strong>What are the trajectories and distance traveled of the supernova remnants that are released outwards from the central core position?</li></ul><ul id="eb7b2432-b1de-4911-bfc6-66faaf4e12f5" class="bulleted-list"><li style="list-style-type:disc"><strong>Impact of Stellar Mass: </strong>How much does the mass of the star and other characteristics scale with the destructive impact of its supernova?</li></ul><ul id="cb5c7ef7-5268-4447-afad-c180d089a66c" class="bulleted-list"><li style="list-style-type:disc"><strong>Formation Patterns: </strong>What is the cause of the existence of different patterns created by the expansion of the supernova remnants?</li></ul><ul id="3f4d28fd-fcff-46d4-808a-8513976998fd" class="bulleted-list"><li style="list-style-type:disc"><strong>Critical Mass for Supernova: </strong>What does the minimum mass of a star have to be to result in a supernova explosion towards the end of its lifecycle?</li></ul><p id="a8986e1d-441d-49c7-b1d6-52154a65fde3" class="">
+</p><p id="159fbab0-760a-4f8d-a1ca-8acdf749d475" class=""><strong>What we hope to deliver</strong></p><ul id="4263073b-39ff-414d-a183-14eace9b09f6" class="bulleted-list"><li style="list-style-type:disc"><strong>Enhanced Physics Engine:</strong> A more sophisticated simulation incorporating more complex fluid dynamics and other complex physical phenomena for a more accurate depiction of supernova behavior.</li></ul><ul id="a90b309e-883f-4798-ac53-ae8aa9d0a324" class="bulleted-list"><li style="list-style-type:disc"><strong>Superior Rendering Engine:</strong> An advanced rendering engine capable of producing highly detailed and colorful visualizations, offering aesthetic and (somewhat) scientific value.</li></ul><p id="bef9f893-6095-4d6d-a7bc-931f677afc2d" class="">
+</p><h2 id="d500329c-3917-4f48-8238-5065b7b12bcf" class="">Schedule</h2><p id="0c7a20cc-7110-4ed5-9b17-735ed6cbbb99" class=""><strong>Week 1:</strong></p><ul id="e409c25b-682b-411e-a702-96acee7eaa30" class="bulleted-list"><li style="list-style-type:disc"><strong>Background Research</strong><ul id="fc491b0c-05f2-48ce-865d-86f19a651810" class="bulleted-list"><li style="list-style-type:circle">Study the physics of supernovas, focusing on fluid dynamics, gravitational forces, and particle interactions.</li></ul><ul id="65300400-183c-48b8-b12b-3dcaead65973" class="bulleted-list"><li style="list-style-type:circle">Explore existing N-body simulations and CUDA acceleration techniques.</li></ul></li></ul><ul id="c9357d93-5e0d-4676-99ac-c56df16e55e9" class="bulleted-list"><li style="list-style-type:disc"><strong>Resource Gathering</strong><ul id="bc7440eb-9f2a-423f-bebf-13de1dc7799d" class="bulleted-list"><li style="list-style-type:circle">Collect academic papers, articles, and tutorials related to space simulations and CUDA.</li></ul><ul id="a1fee25b-16d8-4769-bded-9e33561197b0" class="bulleted-list"><li style="list-style-type:circle">Compile a list of useful code repositories and simulation tools as references.</li></ul></li></ul><ul id="c267dff2-4c3f-4c46-b032-4ed1afcaf3ef" class="bulleted-list"><li style="list-style-type:disc"><strong>Project Infrastructure</strong><ul id="8816426c-048e-48e2-aaad-ae0f433c7e01" class="bulleted-list"><li style="list-style-type:circle">Set up scaffolding for GitHub repository with a clear directory structure and README.</li></ul><ul id="08910923-83e9-42ee-bfea-a3c2b8f47bfd" class="bulleted-list"><li style="list-style-type:circle">Initialize the project with a basic GUI framework, borrowing elements from HW4 Clothsim and the source code from the particle physics simulation reference.</li></ul><ul id="dfa5faed-210d-41a2-b57d-acae6dbb2233" class="bulleted-list"><li style="list-style-type:circle">Establish a data pipeline for importing necessary parameters and initial conditions.</li></ul></li></ul><p id="d678035a-023d-4ed0-97f5-c0c8047ac6d1" class="">
+</p><p id="c21afe58-c934-4f87-b171-59106ff24649" class="">Week 2:</p><ul id="a37ebba6-d344-445f-8ce4-5c641f3733d5" class="bulleted-list"><li style="list-style-type:disc"><strong>Simulation Core</strong><ul id="921246bf-4ec2-4b61-8546-1f1751336a5b" class="bulleted-list"><li style="list-style-type:circle">Develop the mathematical models for particle interactions, focusing on gravitational forces and initial velocities.</li></ul><ul id="a764b1c8-3bf3-447a-88c1-ffdc36ea1014" class="bulleted-list"><li style="list-style-type:circle">Implement the basic N-body simulation logic in a way that allows for easy integration with CUDA later on.</li></ul></li></ul><ul id="6acad59f-2076-420e-94a9-4407b23f7e4e" class="bulleted-list"><li style="list-style-type:disc"><strong>Rendering Setup</strong><ul id="3b517b46-fdff-41ce-b5aa-3243bf4060e6" class="bulleted-list"><li style="list-style-type:circle">Create a simple rendering engine capable of displaying particles with basic properties (e.g., position, and color based on temperature).</li></ul><ul id="c24c8133-a537-4389-965f-fdbe0e385acd" class="bulleted-list"><li style="list-style-type:circle">Ensure the GUI supports basic interaction, such as starting and pausing the simulation.</li></ul></li></ul><p id="a18e39a8-cb63-4b18-a880-ef2033e4594d" class="">
+</p><p id="154861a0-aa7d-4a21-b693-66f9e25141eb" class="">Week 3:</p><ul id="7dadf3c5-e39b-450e-876a-80ee667e3971" class="bulleted-list"><li style="list-style-type:disc"><strong>CUDA Integration</strong><ul id="077ab0f5-3b54-451b-8427-aa516e37c7d1" class="bulleted-list"><li style="list-style-type:circle">Adapt the simulation code to run on the GPU, using CUDA for parallel processing of particle interactions.</li></ul><ul id="0ddb292c-03e6-497e-9964-49eb7a6e0ad9" class="bulleted-list"><li style="list-style-type:circle">Optimize the CUDA implementation to handle hundreds of thousands of particles efficiently.</li></ul></li></ul><ul id="789c1eeb-aaad-4597-80d7-6c631c347049" class="bulleted-list"><li style="list-style-type:disc"><strong>User Interaction Features</strong><ul id="1bcda99b-c666-4693-b4fd-f6c2c84f2f7b" class="bulleted-list"><li style="list-style-type:circle">Implement UI elements for real-time parameter adjustments (e.g., explosion force, particle mass distribution).</li></ul><ul id="fadd6421-215d-4a52-920e-38b71501f77b" class="bulleted-list"><li style="list-style-type:circle">Add features for users to zoom in/out and rotate the view for a better exploration of the simulation.</li></ul></li></ul><p id="d364c5c9-a87c-4ab5-99bb-ee302b0004a5" class="">
+</p><p id="8e791664-ed77-4e34-bf62-d915bc9f14db" class="">Week 4:</p><ul id="e8e1628c-cecb-4141-98c2-7652ae037f5b" class="bulleted-list"><li style="list-style-type:disc"><strong>Rendering and Simulation Polishing</strong><ul id="27617ed0-bc14-4d34-af1b-78872c67958a" class="bulleted-list"><li style="list-style-type:circle">Refine the rendering engine to enhance visual aesthetics, including better color gradients and particle effects.</li></ul><ul id="192017f6-f8ed-45ca-8b62-19bba9cae90e" class="bulleted-list"><li style="list-style-type:circle">Test and adjust the simulation for stability and performance across different parameter sets.</li></ul></li></ul><ul id="1673a1a0-8fdc-4eb7-8f51-cb9b67b2a944" class="bulleted-list"><li style="list-style-type:disc"><strong>Demo and Documentation</strong><ul id="b37cbfc5-1f86-47a4-892b-e6e9a832ae06" class="bulleted-list"><li style="list-style-type:circle">Prepare a recorded demo showcasing the simulation&#x27;s capabilities, including a variety of supernova scenarios.</li></ul><ul id="59123e9f-66bb-4574-bf28-5f7bcdb2f4f6" class="bulleted-list"><li style="list-style-type:circle">Compile a comprehensive final report detailing the project&#x27;s development process, challenges encountered, and solutions implemented.</li></ul></li></ul><ul id="734e2aa7-feb5-4c21-a5bd-1a65b4538f74" class="bulleted-list"><li style="list-style-type:disc"><strong>Presentation Development</strong><ul id="ac3830c6-b3eb-4196-a577-ea29b6c525cf" class="bulleted-list"><li style="list-style-type:circle">Create a presentation that highlights the project&#x27;s key features, findings from the simulation analysis, and potential future improvements.</li></ul><ul id="f60fb7b9-1ab0-4252-8197-d25a3858a1c3" class="bulleted-list"><li style="list-style-type:circle">Rehearse the presentation to ensure clear communication of the project&#x27;s value and achievements.</li></ul></li></ul><p id="754a3558-149d-4ac4-936a-e600ed0145d3" class="">
+</p><hr id="e18fdd8e-bce8-473f-a694-a7cf5720b878"/><h1 id="351d35c9-73ce-45b5-b616-a7b6750eff86" class="">References</h1><h3 id="a8ceeb5b-82be-4f35-aee4-a6765901e299" class="">Simulations for Inspiration</h3><ol type="1" id="f716e3f3-ad4d-4943-a0e7-07606827f944" class="numbered-list" start="1"><li>Particle simulation of gaseous particles in 2D format: <a href="https://www.youtube.com/watch?app=desktop&amp;v=XLMU6o7n4E4&amp;ab_channel=AlexNize">https://www.youtube.com/watch?app=desktop&amp;v=XLMU6o7n4E4&amp;ab_channel=AlexNize</a><ol type="a" id="aa541995-0eec-435d-abfa-64d9105878ba" class="numbered-list" start="1"><li>Timestep start: 5:17 = 5 minutes &amp; 17 seconds</li></ol><ol type="a" id="bc824787-e5d1-44cd-924d-9558a986e17e" class="numbered-list" start="2"><li>Timestep end: 5:50 = 5 minutes &amp; 50 seconds</li></ol><ol type="a" id="3e6adcbf-59d4-4c71-99d2-f43bc5e2365c" class="numbered-list" start="3"><li>This section of the video illustrates the 2d simulation we aspire to create with the interaction around the central gravitational mass, with some outwards forces applied to particles to simulate the “explosion”</li></ol></li></ol><ol type="1" id="465e980b-e415-42a6-8185-f064104bc862" class="numbered-list" start="2"><li>Gravity Explosion Simulation / 500,000 colliding particles (N-Body) / 4k@60fps<ol type="a" id="334124ee-0ba3-4e5b-8429-223e84a67125" class="numbered-list" start="1"><li><a href="https://www.youtube.com/watch?v=2odRs4QOw4Q&amp;ab_channel=AlexNize">https://www.youtube.com/watch?v=2odRs4QOw4Q&amp;ab_channel=AlexNize</a></li></ol></li></ol><p id="5835256f-452d-4686-bb02-8a23d652a0fe" class="">
+</p><h3 id="77c3779e-bea0-4f74-a3c4-8656098899ec" class="">Tools &amp; Platforms</h3><ul id="7a642f2b-177d-4da4-b751-e51bb73850de" class="bulleted-list"><li style="list-style-type:disc">Particle System for n-body-simulation<ul id="a119ac85-a3f8-4252-bc1d-8f252b83a9fd" class="bulleted-list"><li style="list-style-type:circle"><a href="https://github.com/DrA1ex/JS_ParticleSystem/blob/main/README.md#n-body-simulation">https://github.com/DrA1ex/JS_ParticleSystem/blob/main/README.md#n-body-simulation</a></li></ul></li></ul><ul id="524cb779-592e-4277-b4a2-e6e1f0fac027" class="bulleted-list"><li style="list-style-type:disc">Scientific Paper STARFORGE: Toward a comprehensive numerical model of star cluster formation and feedback<ul id="55d4097e-dcdd-4f98-96b3-097ffc989676" class="bulleted-list"><li style="list-style-type:circle"><a href="https://arxiv.org/abs/2010.11254">https://arxiv.org/abs/2010.11254</a></li></ul></li></ul><ul id="78bae2a8-440e-4284-84d6-893d14f37313" class="bulleted-list"><li style="list-style-type:disc">Reference: Using Math and Computing to Model Supernovae<ul id="1f87df81-a4da-4c0f-b54d-eff754af6b24" class="bulleted-list"><li style="list-style-type:circle"><a href="https://cs.lbl.gov/assets/CSSSP-Slides/20160623-Nonaka.pdf">https://cs.lbl.gov/assets/CSSSP-Slides/20160623-Nonaka.pdf</a></li></ul></li></ul><p id="890731be-3f0b-4fef-8326-d76d8a06bb62" class="">
+</p><h3 id="8ce6b5ba-4533-4adb-a59c-6d240ebaab60" class=""><strong>Navier-Stokes Equations</strong></h3><p id="0b351320-f79e-42cf-b086-f0c5a3f8b58a" class="">The Navier-Stokes equations describe the motion of viscous fluid substances and are a fundamental part of fluid dynamics. These equations are essential for simulating the behavior of gases and liquids in space environments, such as the accretion disks around black holes, the atmospheres of planets and stars, and the interstellar medium.</p><h3 id="70cf6da4-0206-4c78-9609-b06e1c4468cc" class=""><strong>Planck&#x27;s Law</strong></h3><p id="f0e3cbbb-9956-4b16-b2ef-a5c4d5536523" class="">Planck&#x27;s law explains how objects at a certain temperature emit light and other electromagnetic radiation. It&#x27;s key for understanding the warmth of stars, the background radiation of the universe, and designing spacecraft thermal systems. The law relates to the radiation&#x27;s frequency, the object&#x27;s temperature, and constants like Planck&#x27;s constant, the speed of light, and the Boltzmann constant.</p><h3 id="d5d3d081-5f5e-4b25-bcb6-0436e310f1c0" class="">Newton’s Law of Universal Gravitation</h3><p id="dce2ba27-e3bf-4d23-9ff7-034b4a82041c" class="">Newton’s law of universal gravitation describes the gravitational forces between two objects. This law states that every particle of matter in the universe attracts every other particle with a force that is directly proportional to the product of their masses and inversely proportional to the square of the distance between their centers. </p><p id="fa63e1b5-6393-4b67-994f-9000d5b65cad" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
