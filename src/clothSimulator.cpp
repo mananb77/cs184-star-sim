@@ -218,7 +218,7 @@ void ClothSimulator::init() {
   canonical_view_distance = max(cloth->width, cloth->height) * 0.9;
   scroll_rate = canonical_view_distance / 10;
 
-  view_distance = canonical_view_distance * 2;
+  view_distance = canonical_view_distance * 2.5;
   min_view_distance = canonical_view_distance / 10.0;
   max_view_distance = canonical_view_distance * 20.0;
 
@@ -500,14 +500,17 @@ Matrix4f ClothSimulator::getViewMatrix() {
 // ----------------------------------------------------------------------------
 
 bool ClothSimulator::cursorPosCallbackEvent(double x, double y) {
+  // if (left_down && !middle_down && !right_down) {
+  //   if (ctrl_down) {
+  //     mouseRightDragged(x, y);
+  //   } else {
+  //     mouseLeftDragged(x, y);
+  //   }
+  // } else if (!left_down && !middle_down && right_down) {
+  //   mouseRightDragged(x, y);
+  // } else 
   if (left_down && !middle_down && !right_down) {
-    if (ctrl_down) {
-      mouseRightDragged(x, y);
-    } else {
-      mouseLeftDragged(x, y);
-    }
-  } else if (!left_down && !middle_down && right_down) {
-    mouseRightDragged(x, y);
+    mouseLeftDragged(x, y);
   } else if (!left_down && !middle_down && !right_down) {
     mouseMoved(x, y);
   }
@@ -556,15 +559,12 @@ bool ClothSimulator::mouseButtonCallbackEvent(int button, int action,
 void ClothSimulator::mouseMoved(double x, double y) { y = screen_h - y; }
 
 void ClothSimulator::mouseLeftDragged(double x, double y) {
-  float dx = x - mouse_x;
-  float dy = y - mouse_y;
-
-  camera.rotate_by(-dy * (PI / screen_h), -dx * (PI / screen_w));
-}
-
-void ClothSimulator::mouseRightDragged(double x, double y) {
   camera.move_by(mouse_x - x, y - mouse_y, canonical_view_distance);
 }
+
+// void ClothSimulator::mouseRightDragged(double x, double y) {
+//   camera.move_by(mouse_x - x, y - mouse_y, canonical_view_distance);
+// }
 
 bool ClothSimulator::keyCallbackEvent(int key, int scancode, int action,
                                       int mods) {

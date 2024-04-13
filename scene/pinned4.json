@@ -6,7 +6,7 @@
     "enable_structural": true,
     "enable_shearing": true,
     "enable_bending": true,
-    "orientation": 0,
+    "orientation": 1,
     "width": 1,
     "height": 1,
     "num_width_points": 50,

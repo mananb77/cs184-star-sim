@@ -90,6 +90,7 @@ void Camera::rotate_by(const double dPhi, const double dTheta) {
   compute_position();
 }
 
+
 void Camera::compute_position() {
   double sinPhi = sin(phi);
   if (sinPhi == 0) {
